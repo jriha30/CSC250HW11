@@ -1,49 +1,32 @@
-import java.util.Random;
-
-public class Driver 
+public class WorkerBee extends Thread
 {
-	public static void main(String[] args) throws InterruptedException 
+	private int[] ar;
+	private int begin;
+	private int end;
+
+	
+	public WorkerBee(int[] ar, int begin, int end)
 	{
-		int[] ar = new int[100];
-		
-		Random r = new Random();
-		for(int i = 0; i < ar.length; i++)
-		{
-			int random = r.nextInt(100);
-			ar[i] = random;
-		}
-		
-		for(int s : ar)
-		{
-			System.out.println(s);
-		}
-		
-		System.out.println("\n\n\n\n");
-		Driver.mergeSort(ar, 0, ar.length - 1);
-		
-		for(int s : ar)
-		{
-			System.out.println(s);
-		}
+		this.ar = ar;
+		this.begin = begin;
+		this.end = end;
 	}
 	
-	
-	static void mergeSort(int[] ar, int begin, int end) throws InterruptedException
+	public void run()
 	{
-		WorkerBee wb1;
-		WorkerBee wb2;
+		mergeSort(this.ar, this.begin, this.end);
+	}
+	
+	static void mergeSort(int[] ar, int begin, int end)
+	{
 		if(begin != end)
 		{
 			int begin1 = begin;
 			int end1 = begin + ((end - begin)/2);
 			int begin2 = end1 + 1;
 			int end2 = end;
-			wb1 = new WorkerBee(ar, begin1, end1);
-			wb2 = new WorkerBee(ar, begin2, end2);
-			wb1.start();
-			wb2.start();
-			wb1.join();
-			wb2.join();
+			mergeSort(ar, begin1, end1);
+			mergeSort(ar, begin2, end2);
 			merge(ar, begin1, end1, begin2, end2);
 		}
 	}
@@ -93,8 +76,4 @@ public class Driver
 			posInTemp++;
 		}
 	}
-	
-	
-	
-	
 }
